@@ -11,16 +11,28 @@
         android:layout_width="wrap_content"
         android:layout_height="195dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="248dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:contentDescription="@string/todo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.008"
-        app:srcCompat="@drawable/model"
-        android:contentDescription="@string/todo" />
+        app:layout_constraintVertical_bias="0.255"
+        app:srcCompat="@drawable/model" />
+
+    <TextView
+        android:id="@+id/analysisOutputTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Output form analysis: "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/faceImageView" />
 
     <Button
         android:id="@+id/detectFaceButton"
@@ -29,9 +41,23 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="Button"
+        android:text="Detect"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/faceImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/analysisOutputTextView" />
+
+    <Button
+        android:id="@+id/analyzeFaceButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Analyze"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detectFaceButton" />
 
 </android.support.constraint.ConstraintLayout>
