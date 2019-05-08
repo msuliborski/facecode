@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,12 +20,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.vision.v1.*;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
-import com.google.api.gax.paging.Page;
 import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
@@ -33,13 +32,13 @@ import com.google.cloud.vision.v1.Feature;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.protobuf.ByteString;
-import com.google.cloud.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,11 +47,18 @@ public class MainActivity extends AppCompatActivity {
     Button detectFaceButton;
     Button analyzeFaceButton;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    //@RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+//        try {
+//            authExplicit("");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         faceImageView = findViewById(R.id.faceImageView);
         analysisOutputTextView = findViewById(R.id.analysisOutputTextView);
@@ -153,4 +159,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+//
+//    static void authExplicit(String jsonPath) throws IOException {
+//        // You can specify a credential file by providing a path to GoogleCredentials.
+//        // Otherwise credentials are read from the GOOGLE_APPLICATION_CREDENTIALS environment variable.
+//        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(jsonPath))
+//                .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
+//        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+//
+//        System.out.println("Buckets:");
+//        Page<Bucket> buckets = storage.list();
+//        for (Bucket bucket : buckets.iterateAll()) {
+//            System.out.println(bucket.toString());
+//        }
+//    }
 }
