@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.auth.oauth2.GoogleCredentials;
 
 import com.google.android.gms.vision.Frame;
@@ -28,16 +29,29 @@ import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
 import com.google.cloud.vision.v1.EntityAnnotation;
+import com.google.cloud.vision.v1.FaceAnnotation;
 import com.google.cloud.vision.v1.Feature;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.protobuf.ByteString;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.api.gax.paging.Page;
+import com.google.auth.appengine.AppEngineCredentials;
+import com.google.auth.oauth2.ComputeEngineCredentials;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.Bucket;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
+import com.google.common.collect.Lists;
+
+import java.io.FileInputStream;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -47,18 +61,10 @@ public class MainActivity extends AppCompatActivity {
     Button detectFaceButton;
     Button analyzeFaceButton;
 
-    //@RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-//        try {
-//            authExplicit("");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
         faceImageView = findViewById(R.id.faceImageView);
         analysisOutputTextView = findViewById(R.id.analysisOutputTextView);
@@ -109,68 +115,43 @@ public class MainActivity extends AppCompatActivity {
 
         analyzeFaceButton.setOnClickListener(d -> {
             try {
-                GoogleCredentials credential =
-                        GoogleCredentials.getApplicationDefault();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            // Instantiates a client
-            try (ImageAnnotatorClient vision = ImageAnnotatorClient.create()) {
-
-                // The path to the image file to annotate
-                String fileName = "./drawable-v24/model.png";
-
-                // Reads the image file into memory
-                Path path = Paths.get(fileName);
-                byte[] data = Files.readAllBytes(path);
-                ByteString imgBytes = ByteString.copyFrom(data);
-
-                // Builds the image annotation request
-                List<AnnotateImageRequest> requests = new ArrayList<>();
-                Image img = Image.newBuilder().setContent(imgBytes).build();
-                Feature feat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
-                AnnotateImageRequest request = AnnotateImageRequest.newBuilder()
-                        .addFeatures(feat)
-                        .setImage(img)
-                        .build();
-                requests.add(request);
-
-                // Performs label detection on the image file
-                BatchAnnotateImagesResponse response = vision.batchAnnotateImages(requests);
-                List<AnnotateImageResponse> responses = response.getResponsesList();
-
-                for (AnnotateImageResponse res : responses) {
-                    if (res.hasError()) {
-                        System.out.printf("Error: %s\n", res.getError().getMessage());
-                        analysisOutputTextView.setText(analysisOutputTextView.getText() + "Error: %s\n" + res.getError().getMessage());
-                        return;
-                    }
-
-                    for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-                        annotation.getAllFields().forEach((k, v) -> {
-                            System.out.printf("%s : %s\n", k, v.toString());
-
-                            analysisOutputTextView.setText(analysisOutputTextView.getText() + "%s : %s\n" + k + v.toString());
-                        });
-                    }
-                }
-            } catch (IOException e) {
+                detectFaces("drawable-v24/model.png", System.out);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
     }
-//
-//    static void authExplicit(String jsonPath) throws IOException {
-//        // You can specify a credential file by providing a path to GoogleCredentials.
-//        // Otherwise credentials are read from the GOOGLE_APPLICATION_CREDENTIALS environment variable.
-//        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(jsonPath))
-//                .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
-//        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-//
-//        System.out.println("Buckets:");
-//        Page<Bucket> buckets = storage.list();
-//        for (Bucket bucket : buckets.iterateAll()) {
-//            System.out.println(bucket.toString());
-//        }
-//    }
+    public static void detectFaces(String filePath, PrintStream out) throws Exception, IOException {
+        List<AnnotateImageRequest> requests = new ArrayList<>();
+
+        ByteString imgBytes = ByteString.readFrom(new FileInputStream(filePath));
+
+        Image img = Image.newBuilder().setContent(imgBytes).build();
+        Feature feat = Feature.newBuilder().setType(Feature.Type.FACE_DETECTION).build();
+        AnnotateImageRequest request =
+                AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
+        requests.add(request);
+
+        try (ImageAnnotatorClient client = ImageAnnotatorClient.create()) {
+            BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
+            List<AnnotateImageResponse> responses = response.getResponsesList();
+
+            for (AnnotateImageResponse res : responses) {
+                if (res.hasError()) {
+                    out.printf("Error: %s\n", res.getError().getMessage());
+                    return;
+                }
+
+                // For full list of available annotations, see http://g.co/cloud/vision/docs
+                for (FaceAnnotation annotation : res.getFaceAnnotationsList()) {
+                    out.printf(
+                            "anger: %s\njoy: %s\nsurprise: %s\nposition: %s",
+                            annotation.getAngerLikelihood(),
+                            annotation.getJoyLikelihood(),
+                            annotation.getSurpriseLikelihood(),
+                            annotation.getBoundingPoly());
+                }
+            }
+        }
+    }
 }
