@@ -1,176 +1,182 @@
 package com.facecoders.facecode;
 
-import android.app.AlertDialog;
-import android.app.usage.NetworkStats;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
-import android.os.Environment;
-import android.support.annotation.RequiresApi;
+import android.graphics.Matrix;
+import android.hardware.Camera;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.SparseArray;
+import android.util.Log;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.auth.oauth2.GoogleCredentials;
+import com.facecoders.facecode.tflite.Classifier;
+import com.facecoders.facecode.tflite.Classifier.Device;
+import com.facecoders.facecode.tflite.Classifier.Model;
+import com.facecoders.facecode.tflite.Classifier.Recognition;
 
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.face.Face;
-import com.google.android.gms.vision.face.FaceDetector;
-import com.google.cloud.vision.v1.AnnotateImageRequest;
-import com.google.cloud.vision.v1.AnnotateImageResponse;
-import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
-import com.google.cloud.vision.v1.EntityAnnotation;
-import com.google.cloud.vision.v1.Feature;
-import com.google.cloud.vision.v1.Image;
-import com.google.cloud.vision.v1.ImageAnnotatorClient;
-import com.google.protobuf.ByteString;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
-    ImageView faceImageView;
-    TextView analysisOutputTextView;
-    Button detectFaceButton;
-    Button analyzeFaceButton;
+    private Camera camera;
 
-    //@RequiresApi(api = Build.VERSION_CODES.O)
+    private static final int PERMISSIONS_REQUEST = 108;
+
+    private Classifier classifier;
+
+    Bitmap bitmapToAnalyze;
+
+    TextView outputTextView;
+    Button button;
+    Button button2;
+    ImageView img;
+    Bitmap croppedBitmap;
+    List<Recognition> predictions;
+
+
+    android.os.Handler customHandler = new android.os.Handler();
+    android.os.Handler customHandler2 = new android.os.Handler();
+
+
+    boolean isCameraBusy = false;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        requestMultiplePermissions();
+
+        outputTextView = findViewById(R.id.outputTextView);
+        img = findViewById(R.id.img);
+
+        camera = getCameraInstance();
+        camera.setDisplayOrientation(90);
+
+        Camera.Parameters params = camera.getParameters();
+//*EDIT*//
+//It is better to use defined constraints as opposed to String, thanks to AbdelHady
+//        params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+        params.setFocusMode("continuous-picture");
+        camera.setParameters(params);
+
+        CameraPreview mPreview = new CameraPreview(this, camera);
+        FrameLayout cameraFrameLayout = findViewById(R.id.cameraFrameLayout);
+        cameraFrameLayout.addView(mPreview);
+
+        Model model = Model.valueOf("Quantized".toUpperCase());
+        Device device = Device.valueOf("CPU");
+        int numThreads = 1;
 
 
-//        try {
-//            authExplicit("");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-        faceImageView = findViewById(R.id.faceImageView);
-        analysisOutputTextView = findViewById(R.id.analysisOutputTextView);
-        detectFaceButton = findViewById(R.id.detectFaceButton);
-        analyzeFaceButton = findViewById(R.id.analyzeFaceButton);
-
-        detectFaceButton.setOnClickListener(v -> {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inMutable = true;
-            Bitmap myBitmap = BitmapFactory.decodeResource(
-                    getApplicationContext().getResources(),
-                    R.drawable.model,
-                    options);
-
-            Paint myRectPaint = new Paint();
-            myRectPaint.setStrokeWidth(5);
-            myRectPaint.setColor(Color.RED);
-            myRectPaint.setStyle(Paint.Style.STROKE);
-
-            Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
-            Canvas tempCanvas = new Canvas(tempBitmap);
-            tempCanvas.drawBitmap(myBitmap, 0, 0, null);
-
-            FaceDetector faceDetector = new
-                    FaceDetector.Builder(getApplicationContext()).setTrackingEnabled(false)
-                    .build();
-            if (!faceDetector.isOperational()) {
-                new AlertDialog.Builder(v.getContext()).setMessage("Could not set up the face detector!").show();
-                return;
-            }
 
 
-            Frame frame = new Frame.Builder().setBitmap(myBitmap).build();
-            SparseArray<Face> faces = faceDetector.detect(frame);
+        try {
+            classifier = Classifier.create(this, model, device, numThreads);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
-            for (int i = 0; i < faces.size(); i++) {
-                Face thisFace = faces.valueAt(i);
-                float x1 = thisFace.getPosition().x;
-                float y1 = thisFace.getPosition().y;
-                float x2 = x1 + thisFace.getWidth();
-                float y2 = y1 + thisFace.getHeight();
-                tempCanvas.drawRoundRect(new RectF(x1, y1, x2, y2), 2, 2, myRectPaint);
-            }
-            faceImageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
-        });
+        customHandler.postDelayed(updateBitmap, 500);
+        customHandler2.postDelayed(analyzeBitmap, 2000);
 
 
-        analyzeFaceButton.setOnClickListener(d -> {
-            try {
-                GoogleCredentials credential =
-                        GoogleCredentials.getApplicationDefault();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            // Instantiates a client
-            try (ImageAnnotatorClient vision = ImageAnnotatorClient.create()) {
-
-                // The path to the image file to annotate
-                String fileName = "./drawable-v24/model.png";
-
-                // Reads the image file into memory
-                Path path = Paths.get(fileName);
-                byte[] data = Files.readAllBytes(path);
-                ByteString imgBytes = ByteString.copyFrom(data);
-
-                // Builds the image annotation request
-                List<AnnotateImageRequest> requests = new ArrayList<>();
-                Image img = Image.newBuilder().setContent(imgBytes).build();
-                Feature feat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
-                AnnotateImageRequest request = AnnotateImageRequest.newBuilder()
-                        .addFeatures(feat)
-                        .setImage(img)
-                        .build();
-                requests.add(request);
-
-                // Performs label detection on the image file
-                BatchAnnotateImagesResponse response = vision.batchAnnotateImages(requests);
-                List<AnnotateImageResponse> responses = response.getResponsesList();
-
-                for (AnnotateImageResponse res : responses) {
-                    if (res.hasError()) {
-                        System.out.printf("Error: %s\n", res.getError().getMessage());
-                        analysisOutputTextView.setText(analysisOutputTextView.getText() + "Error: %s\n" + res.getError().getMessage());
-                        return;
-                    }
-
-                    for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-                        annotation.getAllFields().forEach((k, v) -> {
-                            System.out.printf("%s : %s\n", k, v.toString());
-
-                            analysisOutputTextView.setText(analysisOutputTextView.getText() + "%s : %s\n" + k + v.toString());
-                        });
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
     }
-//
-//    static void authExplicit(String jsonPath) throws IOException {
-//        // You can specify a credential file by providing a path to GoogleCredentials.
-//        // Otherwise credentials are read from the GOOGLE_APPLICATION_CREDENTIALS environment variable.
-//        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(jsonPath))
-//                .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
-//        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-//
-//        System.out.println("Buckets:");
-//        Page<Bucket> buckets = storage.list();
-//        for (Bucket bucket : buckets.iterateAll()) {
-//            System.out.println(bucket.toString());
-//        }
-//    }
+
+    private Runnable updateBitmap = new Runnable() {
+        public void run() {
+            if(!isCameraBusy) {
+                isCameraBusy = true;
+                camera.takePicture(null, null, mPicture);
+            }
+            customHandler.postDelayed(this, 1000);
+        }
+    };
+
+    private Runnable analyzeBitmap = new Runnable() {
+        public void run() {
+            predictions = classifier.recognizeImage(bitmapToAnalyze);
+            StringBuilder ca = new StringBuilder();
+            for (int i = 0; i < predictions.size(); i++){
+                ca.append(predictions.get(i).getTitle()).append("(").append(String.format("%.2f", predictions.get(i).getConfidence())).append(")\n");
+            }
+
+            String finalCa = ca.toString();
+            runOnUiThread(() ->
+                    outputTextView.setText(finalCa));
+            customHandler.postDelayed(this, 1000);
+        }
+    };
+
+
+    private Camera.PictureCallback mPicture = (data, camera) -> {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        bitmapToAnalyze = Bitmap.createBitmap(decodedBitmap, 0, 0, decodedBitmap.getWidth(), decodedBitmap.getHeight(), matrix, true);
+        bitmapToAnalyze = getScaleBitmap(bitmapToAnalyze, 224);
+        img.setImageBitmap(bitmapToAnalyze);
+        isCameraBusy = false;
+    };
+
+    private static Bitmap getScaleBitmap(Bitmap bitmap, int size) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        float scaleWidth = ((float) size) / width;
+        float scaleHeight = ((float) size) / height;
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+    }
+
+
+    private void requestMultiplePermissions() {
+
+        String storagePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        String cameraPermission = Manifest.permission.CAMERA;
+
+        int hasStoragePermission = ActivityCompat.checkSelfPermission(this, storagePermission);
+        int hasCameraPermission = ActivityCompat.checkSelfPermission(this, cameraPermission);
+
+        List<String> permissions = new ArrayList<>();
+        if (hasStoragePermission != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(storagePermission);
+        }
+
+        if (hasCameraPermission != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(cameraPermission);
+        }
+
+        if (!permissions.isEmpty()) {
+            String[] params = permissions.toArray(new String[permissions.size()]);
+            ActivityCompat.requestPermissions(this, params, PERMISSIONS_REQUEST);
+        }
+    }
+
+
+    public static Camera getCameraInstance(){
+        Camera c = null;
+        try {
+            c = Camera.open(); // attempt to get a Camera instance
+        }
+        catch (Exception e){
+            // Camera is not available (in use or does not exist)
+        }
+        return c; // returns null if camera is unavailable
+    }
+
+
 }
