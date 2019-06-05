@@ -20,6 +20,8 @@ import com.facecoders.facecode.tflite.Classifier.Device;
 import com.facecoders.facecode.tflite.Classifier.Model;
 import com.facecoders.facecode.tflite.Classifier.Recognition;
 
+import org.tensorflow.lite.TensorFlowLite;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,11 +78,9 @@ public class MainActivity extends AppCompatActivity{
         FrameLayout cameraFrameLayout = findViewById(R.id.cameraFrameLayout);
         cameraFrameLayout.addView(mPreview);
 
-        Model model = Model.valueOf("Quantized".toUpperCase());
+        Model model = Model.valueOf("Float".toUpperCase());
         Device device = Device.valueOf("CPU");
         int numThreads = 1;
-
-
 
 
         try {
@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity{
 
         customHandler.postDelayed(updateBitmap, 500);
         customHandler2.postDelayed(analyzeBitmap, 2000);
-
 
     }
 
