@@ -14,7 +14,7 @@
         tools:layout_editor_absoluteY="25dp" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/photo_icon_s1"
         android:layout_width="128dp"
         android:layout_height="128dp"
         app:srcCompat="@drawable/photo_icon"
@@ -22,7 +22,7 @@
         tools:layout_editor_absoluteY="565dp" />
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/change_screen_icon_s1"
         android:layout_width="68dp"
         android:layout_height="63dp"
         app:srcCompat="@drawable/change_camera"

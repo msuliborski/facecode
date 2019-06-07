@@ -7,7 +7,7 @@
     android:background="#FFFCFF">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/candide"
         android:layout_width="213dp"
         android:layout_height="215dp"
         app:srcCompat="@drawable/candide_icon"
@@ -15,7 +15,7 @@
         tools:layout_editor_absoluteY="212dp" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/facecoders_name"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:text="@string/facecoders_name"
