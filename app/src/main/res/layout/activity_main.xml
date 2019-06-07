@@ -9,38 +9,127 @@
 
     <FrameLayout
         android:id="@+id/cameraFrameLayout"
-        android:layout_width="300dp"
-        android:layout_height="400dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
         android:background="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:context="com.facecoders.facecode.MainActivity" />
+        tools:context="com.facecoders.facecode.MainActivity">
 
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:background="#009E1414"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/bar" />
 
     <TextView
         android:id="@+id/outputTextView"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@android:color/background_light"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cameraFrameLayout" />
+        app:layout_constraintTop_toTopOf="@+id/cameraFrameLayout" />
 
     <ImageView
         android:id="@+id/img"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/outputTextView" />
+        app:layout_constraintTop_toTopOf="@+id/cameraFrameLayout" />
+
+    <ImageButton
+        android:id="@+id/changeCameraButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/common_google_signin_btn_icon_dark_focused" />
+
+    <ProgressBar
+        android:id="@+id/emotionPercent1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:max="100"
+        android:progress="50"
+        app:layout_constraintBottom_toTopOf="@+id/emotionPercent2"
+        app:layout_constraintEnd_toStartOf="@+id/changeCameraButton"
+        app:layout_constraintStart_toEndOf="@+id/emotionText1" />
+
+    <ProgressBar
+        android:id="@+id/emotionPercent2"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:max="100"
+        android:progress="30"
+        app:layout_constraintBottom_toTopOf="@+id/emotionPercent3"
+        app:layout_constraintEnd_toStartOf="@+id/changeCameraButton"
+        app:layout_constraintStart_toEndOf="@+id/emotionText2" />
+
+    <ProgressBar
+        android:id="@+id/emotionPercent3"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="20dp"
+        android:max="100"
+        android:progress="20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/changeCameraButton"
+        app:layout_constraintStart_toEndOf="@+id/emotionText3" />
+
+    <TextView
+        android:id="@+id/emotionText1"
+        android:layout_width="80dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="d"
+        app:layout_constraintBottom_toTopOf="@+id/emotionText2"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/emotionText2"
+        android:layout_width="80dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="dwedwTextView"
+        app:layout_constraintBottom_toTopOf="@+id/emotionText3"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/emotionText3"
+        android:layout_width="80dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="20dp"
+        android:text="awd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
