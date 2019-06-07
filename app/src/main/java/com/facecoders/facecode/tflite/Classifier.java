@@ -217,7 +217,6 @@ public abstract class Classifier {
     }
     imgData.rewind();
     bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-    Log.wtf("eafi", intValues.length + "  " + 0 + "  " + bitmap.getWidth() + "  " + 0 + "  " + 0 + "  " + bitmap.getWidth() + "  " + bitmap.getHeight());
     // Convert the image to floating point.
     int pixel = 0;
     long startTime = SystemClock.uptimeMillis();
