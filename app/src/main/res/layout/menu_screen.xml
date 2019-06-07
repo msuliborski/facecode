@@ -7,7 +7,7 @@
     android:background="#4F91CD">
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/photo_icon"
         android:layout_width="223dp"
         android:layout_height="223dp"
         app:srcCompat="@drawable/photo_icon"
@@ -15,7 +15,7 @@
         tools:layout_editor_absoluteY="156dp" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/camera_icon"
         android:layout_width="223dp"
         android:layout_height="223dp"
         app:srcCompat="@drawable/camera_icon"
@@ -23,7 +23,7 @@
         tools:layout_editor_absoluteY="405dp" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/settings_icon"
         android:layout_width="99dp"
         android:layout_height="99dp"
         app:srcCompat="@drawable/settings_icon"
