@@ -45,12 +45,14 @@ public class ClassifierFloatMobileNet extends Classifier {
 
   @Override
   public int getImageSizeX() {
-    return 224;
+    return 48;
+//    return 224;
   }
 
   @Override
   public int getImageSizeY() {
-    return 224;
+    return 48;
+//    return 224;
   }
 
   @Override
@@ -58,7 +60,7 @@ public class ClassifierFloatMobileNet extends Classifier {
     // you can download this file from
     // see build.gradle for where to obtain this file. It should be auto
     // downloaded into assets.
-    return "model.tflite";
+    return "model-150-60.tflite";
   }
 
   @Override

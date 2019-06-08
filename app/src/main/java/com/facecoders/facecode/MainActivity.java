@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.hardware.Camera;
@@ -14,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,7 +39,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity{
 
     private Camera camera;
-    private boolean frontFacingCamera = false;
+    private boolean frontFacingCamera = true;
 
     private static final int PERMISSIONS_REQUEST = 108;
 
@@ -61,16 +62,10 @@ public class MainActivity extends AppCompatActivity{
     Bitmap croppedBitmap;
     List<Recognition> predictions;
 
-
-
     android.os.Handler customHandler = new android.os.Handler();
     android.os.Handler customHandler2 = new android.os.Handler();
 
-
-
     boolean isCameraBusy = false;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +146,7 @@ public class MainActivity extends AppCompatActivity{
 //        cameraParameters.getPreviewSize().width         cameraParameters.getPreviewSize().height
 //        height????                                                          width
 
+//        Model model = Model.valueOf("Quantized".toUpperCase());
         Model model = Model.valueOf("Float".toUpperCase());
         Device device = Device.valueOf("CPU");
         int numThreads = 4;
@@ -166,17 +162,17 @@ public class MainActivity extends AppCompatActivity{
 //        customHandler.postDelayed(updateBitmap, 500);
 //        customHandler2.postDelayed(analyzeBitmap, 2000);
 
-        customHandler.postDelayed(updateBitmap, 1000);
+        customHandler.postDelayed(updateBitmap, 500);
 
     }
 
     private Runnable updateBitmap = new Runnable() {
         public void run() {
-//            if (!isCameraBusy) {
-//                isCameraBusy = true;
+            if (!isCameraBusy) {
+                isCameraBusy = true;
                 camera.takePicture(null, null, mPicture);
-//            }
-            customHandler.postDelayed(this, 500);
+            }
+            customHandler.postDelayed(this, 1200);
 //            customHandler.postDelayed(this, 1/60);
         }
     };
@@ -229,8 +225,7 @@ public class MainActivity extends AppCompatActivity{
 //        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 //        bitmapToAnalyze = Bitmap.createBitmap(decodedBitmap, 0, 0, decodedBitmap.getWidth(), decodedBitmap.getHeight(), matrix, true);
 //        bitmapToAnalyze = getScaleBitmap(bitmapToAnalyze, 224);
-        img.setImageBitmap(bitmapToAnalyze);
-//        isCameraBusy = false;
+        isCameraBusy = true;
 
         Log.wtf("mPicture", "wbijam");
 
@@ -246,7 +241,9 @@ public class MainActivity extends AppCompatActivity{
         Log.wtf("mPicture", "mam foto");
         // z tego wykrywamy twarz JEDNA
         bitmapToDisplay = getCroppedBitmap(rotatedBitmap);
-        bitmapToDisplay = getScaledBitmap(bitmapToDisplay, 224);
+        bitmapToDisplay = getScaledBitmap(bitmapToDisplay, 48);
+        bitmapToDisplay = toGrayscale(bitmapToDisplay);
+        img.setImageBitmap(bitmapToDisplay);
         Paint myPaint = new Paint();
         myPaint.setColor(Color.GREEN);
         myPaint.setStyle(Paint.Style.STROKE);
@@ -272,10 +269,15 @@ public class MainActivity extends AppCompatActivity{
                 canvas.drawCircle(cx, cy, 1, myPaint);
             }
 
-            int x = (int)(face.getPosition().x*0.8f);
-            int y = (int)(face.getPosition().y*0.8f);
-            int w = (int)(face.getWidth()*1.2f);
-            int h = (int)(face.getHeight()*1.2f);
+//            int x = (int)(face.getPosition().x*0.8f);
+//            int y = (int)(face.getPosition().y*0.8f);
+//            int w = (int)(face.getWidth()*1.2f);
+//            int h = (int)(face.getHeight()*1.2f);
+
+            int x = (int)(face.getPosition().x);
+            int y = (int)(face.getPosition().y);
+            int w = (int)(face.getWidth());
+            int h = (int)(face.getHeight());
 
             boolean faceIsFine = true;
             while (x < 0 || y < 0 || x + w > bitmapToDisplay.getWidth() || y + h > bitmapToDisplay.getHeight()){
@@ -320,6 +322,22 @@ public class MainActivity extends AppCompatActivity{
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+    }
+
+    public Bitmap toGrayscale(Bitmap bmpOriginal) {
+        int width, height;
+        height = bmpOriginal.getHeight();
+        width = bmpOriginal.getWidth();
+
+        Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmpGrayscale);
+        Paint paint = new Paint();
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        paint.setColorFilter(f);
+        c.drawBitmap(bmpOriginal, 0, 0, paint);
+        return bmpGrayscale;
     }
 
 
@@ -392,14 +410,14 @@ public class MainActivity extends AppCompatActivity{
         }
     }
     public Camera getCameraInstance(boolean frontFacingCamera) {
-        if (camera != null) camera.release();
+//        if (camera != null) camera.release();
 
         Camera c = null;
         try {
-            if (frontFacingCamera)
+//            if (frontFacingCamera)
                 c = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT); // attempt to get a Camera instance
-            else
-                c = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+//            else
+//                c = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
         } catch (Exception e) {
             // Camera is not available (in use or does not exist)
         }
