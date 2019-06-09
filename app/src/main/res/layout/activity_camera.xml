@@ -9,33 +9,12 @@
     <FrameLayout
         android:id="@+id/cameraPreviewFrameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="500dp"
         android:background="#000"
-        tools:context="com.facecoders.facecode.activities.CameraActivity" >
-    </FrameLayout>
-
-    <!--android:background="@android:color/black"-->
-
-    <!--<ImageView-->
-        <!--android:id="@+id/toAnalyzeImageView"-->
-        <!--android:layout_width="150dp"-->
-        <!--android:layout_height="150dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="@+id/cameraPreviewTextureView" />-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/outputTextView"-->
-        <!--android:layout_width="150dp"-->
-        <!--android:layout_height="150dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:textColor="@android:color/background_light"-->
-        <!--android:textSize="14sp"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="@+id/cameraPreviewTextureView" />-->
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context="com.facecoders.facecode.activities.CameraActivity"></FrameLayout>
 
 
     <ImageView
@@ -64,21 +43,22 @@
         android:layout_width="0dp"
         android:layout_height="100dp"
         android:background="#009E1414"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cameraPreviewFrameLayout"
         app:srcCompat="@drawable/bar" />
 
     <ImageButton
         android:id="@+id/changeCameraImageButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginTop="22dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="32dp"
         android:background="#00FFFFFF"
         android:scaleType="centerInside"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/barsBackground"
+        app:layout_constraintTop_toBottomOf="@+id/cameraPreviewFrameLayout"
         app:srcCompat="@drawable/change_cam_background" />
 
     <ProgressBar
@@ -87,13 +67,13 @@
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:max="100"
         android:progress="50"
-        app:layout_constraintBottom_toTopOf="@+id/emotion2ProgressBar"
         app:layout_constraintEnd_toStartOf="@+id/changeCameraImageButton"
-        app:layout_constraintStart_toEndOf="@+id/emotion1TextView" />
+        app:layout_constraintStart_toEndOf="@+id/emotion1TextView"
+        app:layout_constraintTop_toBottomOf="@+id/cameraPreviewFrameLayout" />
 
     <ProgressBar
         android:id="@+id/emotion2ProgressBar"
@@ -101,13 +81,13 @@
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:max="100"
         android:progress="30"
-        app:layout_constraintBottom_toTopOf="@+id/emotion3ProgressBar"
         app:layout_constraintEnd_toStartOf="@+id/changeCameraImageButton"
-        app:layout_constraintStart_toEndOf="@+id/emotion2TextView" />
+        app:layout_constraintStart_toEndOf="@+id/emotion2TextView"
+        app:layout_constraintTop_toBottomOf="@+id/emotion1ProgressBar" />
 
     <ProgressBar
         android:id="@+id/emotion3ProgressBar"
@@ -115,42 +95,42 @@
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="20dp"
         android:max="100"
         android:progress="20"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/changeCameraImageButton"
-        app:layout_constraintStart_toEndOf="@+id/emotion3TextView" />
+        app:layout_constraintStart_toEndOf="@+id/emotion3TextView"
+        app:layout_constraintTop_toBottomOf="@+id/emotion2ProgressBar" />
 
     <TextView
         android:id="@+id/emotion1TextView"
         android:layout_width="80dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="12dp"
         android:text="123"
-        app:layout_constraintBottom_toTopOf="@+id/emotion2TextView"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cameraPreviewFrameLayout" />
 
     <TextView
         android:id="@+id/emotion2TextView"
         android:layout_width="80dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:text="123"
-        app:layout_constraintBottom_toTopOf="@+id/emotion3TextView"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emotion1TextView" />
 
     <TextView
         android:id="@+id/emotion3TextView"
         android:layout_width="80dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="8dp"
         android:text="123"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emotion2TextView" />
 
 </android.support.constraint.ConstraintLayout>
