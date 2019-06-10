@@ -7,21 +7,21 @@ import android.widget.ImageButton;
 
 import com.facecoders.facecode.R;
 
-public class WelcomeActivity extends AppCompatActivity {
 
-    ImageButton candidImageButton;
+public class PhotoActivity extends AppCompatActivity {
+
+
+    ImageButton takePhotoImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
+        setContentView(R.layout.activity_photo);
 
-        candidImageButton = findViewById(R.id.candidImageButton);
-        candidImageButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MenuActivity.class);
+        takePhotoImageButton = findViewById(R.id.takePhotoImageButton);
+        takePhotoImageButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PhotoResultActivity.class);
             startActivity(intent);
         });
-
     }
-
 }
