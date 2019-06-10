@@ -18,7 +18,7 @@
 
 
     <ImageView
-        android:id="@+id/toAnalyzeImageView"
+        android:id="@+id/viewImageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="8dp"

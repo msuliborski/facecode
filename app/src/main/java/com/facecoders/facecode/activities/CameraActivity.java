@@ -1,49 +1,30 @@
 package com.facecoders.facecode.activities;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.SparseArray;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.facecoders.facecode.CameraPreview;
-import com.facecoders.facecode.camera2.Camera2BasicFragment;
 import com.facecoders.facecode.R;
+import com.facecoders.facecode.camera.CameraHandler;
+import com.facecoders.facecode.camera.CameraPreview;
 import com.facecoders.facecode.tflite.Classifier;
-import com.facecoders.facecode.tflite.Classifier.Device;
-import com.facecoders.facecode.tflite.Classifier.Model;
-import com.facecoders.facecode.tflite.Classifier.Recognition;
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.face.Face;
-import com.google.android.gms.vision.face.FaceDetector;
+import com.facecoders.facecode.tflite.ClassifierHandler;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class CameraActivity extends AppCompatActivity {
 
     private Camera camera;
-    private boolean frontFacingCamera = false;
 
-    private static final int PERMISSIONS_REQUEST = 108;
-
-    private Classifier classifier;
+    private int imageSize = 48;
 
     FrameLayout cameraPreviewFrameLayout;
 
@@ -57,7 +38,7 @@ public class CameraActivity extends AppCompatActivity {
     ProgressBar emotion2ProgressBar;
     ProgressBar emotion3ProgressBar;
 
-    List<Recognition> predictions;
+
     ImageButton changeCameraImageButton;
 
     Bitmap croppedBitmap;
@@ -68,7 +49,10 @@ public class CameraActivity extends AppCompatActivity {
     android.os.Handler customHandler = new android.os.Handler();
     android.os.Handler customHandler2 = new android.os.Handler();
 
-    boolean isCameraBusy = false;
+    private boolean cameraFacingFront = false;
+    private boolean isCameraBusy = false;
+    private boolean showLandmarks = false;
+    private boolean detectFace = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +62,7 @@ public class CameraActivity extends AppCompatActivity {
         cameraPreviewFrameLayout = findViewById(R.id.cameraPreviewFrameLayout);
 
         outputTextView = findViewById(R.id.outputTextView);
-        toAnalyzeImageView = findViewById(R.id.toAnalyzeImageView);
+        toAnalyzeImageView = findViewById(R.id.viewImageView);
 
         emotion1TextView = findViewById(R.id.emotion1TextView);
         emotion2TextView = findViewById(R.id.emotion2TextView);
@@ -88,91 +72,47 @@ public class CameraActivity extends AppCompatActivity {
         emotion3ProgressBar = findViewById(R.id.emotion3ProgressBar);
 
         changeCameraImageButton = findViewById(R.id.changeCameraImageButton);
+        changeCameraImageButton.setOnClickListener(v -> {
+
+            customHandler.removeCallbacks(updateBitmap);
+
+            cameraFacingFront = !cameraFacingFront;
+            camera = CameraHandler.getCameraInstance(cameraFacingFront);
+            camera.setDisplayOrientation(90);
+            Camera.Parameters cameraParameters = camera.getParameters();
+            for (Camera.Size size : cameraParameters.getSupportedPictureSizes()) {
+                if (1080 <= size.width && size.height <= 1920) {
+                    cameraParameters.setPictureSize(size.width, size.height);
+                    break;
+                }
+            }
+            cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE); //It is better to use defined constraints as opposed to String, thanks to AbdelHady
+            camera.setParameters(cameraParameters);
+            cameraPreviewFrameLayout.addView(new CameraPreview(this, camera));
+            customHandler.postDelayed(updateBitmap, 5000);
+        });
 
 
-
-
-
-
-        //        changeCameraImageButton.setOnClickListener(v -> {
-//            frontFacingCamera = !frontFacingCamera;
-//            camera = getCameraInstance(frontFacingCamera);
-//            camera.setDisplayOrientation(90);
-//            Camera.Parameters cameraParameters = camera.getParameters();
-//            cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE); //It is better to use defined constraints as opposed to String, thanks to AbdelHady
-//            cameraParameters.setFocusMode("continuous-picture");
-//            cameraParameters.setPictureSize(1920, 1080);
-//            camera.setParameters(cameraParameters);
-//            CameraPreview cameraPreview = new CameraPreview(this, camera);
-//            FrameLayout cameraFrameLayout = findViewById(R.id.cameraFrameLayout);
-//            cameraFrameLayout.addView(cameraPreview);
-//            cameraFrameLayout.getLayoutParams().height = -1;
-//
-//            customHandler.removeCallbacks(updateBitmap);
-//            customHandler.postDelayed(updateBitmap, 1000);
-//        });
-
-
-        camera = getCameraInstance(frontFacingCamera);
+        camera = CameraHandler.getCameraInstance(cameraFacingFront);
         camera.setDisplayOrientation(90);
-//
-//
         Camera.Parameters cameraParameters = camera.getParameters();
-//
-//        for (Camera.Size size : cameraParameters.getSupportedPictureSizes()) {
-//            if (1080 <= size.width && size.width <= 1920) {
-//                cameraParameters.setPreviewSize(size.width, size.height);
-//                cameraParameters.setPictureSize(size.width, size.height);
-//                break;
-//            }
-//        }
-        cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE); //It is better to use defined constraints as opposed to String, thanks to AbdelHady
-//        cameraParameters.setFocusMode("continuous-picture");
-        cameraParameters.setPictureSize(1920, 1080);
-////        camera.setParameters(cameraParameters);
-        camera.setParameters(cameraParameters);
-//
-//        List<Camera.Size> supportedSizes = params.getSupportedPictureSizes();
-//        for(Camera.Size c : supportedSizes)
-//            Log.wtf("eadadea", c.height + "x"+c.width);
-
-        CameraPreview cameraPreview = new CameraPreview(this, camera);
-        cameraPreviewFrameLayout.addView(cameraPreview);
-
-//        Log.wtf("camera1", cameraFrameLayout.getLayoutParams().height+"");
-//        Log.wtf("camera2", cameraFrameLayout.getLayoutParams().width+"");
-//        Log.wtf("camera3", cameraParameters.getPreviewSize().width+"");
-//        Log.wtf("camera4", cameraParameters.getPreviewSize().height+"");
-//        toAnalyzeImageView.getLayoutParams().height = -1;
-//        cameraFrameLayout.getLayoutParams().height = cameraFrameLayout.getLayoutParams().width*cameraParameters.getPreviewSize().width/cameraParameters.getPreviewSize().height;
-//        a.height = 100;
-//        cameraFrameLayout.setLayoutParams(a);
-
-//                .LayoutParams(
-//                cameraFrameLayout.getWidth(), cameraFrameLayout.getWidth()*cameraParameters.getPreviewSize().width/cameraParameters.getPreviewSize().height));
-
-//
-//                      9                                            16
-//        cameraParameters.getPreviewSize().width         cameraParameters.getPreviewSize().height
-//        height????                                                          width
-
-//        Model model = Model.valueOf("Quantized".toUpperCase());
-        Classifier.Model model = Classifier.Model.valueOf("FLOAT");
-        Classifier.Device device = Classifier.Device.valueOf("CPU");
-        int numThreads = 4;
-
-
-        try {
-            classifier = Classifier.create(this, model, device, numThreads);
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (Camera.Size size : cameraParameters.getSupportedPictureSizes()) {
+            if (1080 <= size.width && size.height <= 1920) {
+                cameraParameters.setPictureSize(size.width, size.height);
+                break;
+            }
         }
+        cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE); //It is better to use defined constraints as opposed to String, thanks to AbdelHady
+        camera.setParameters(cameraParameters);
+        cameraPreviewFrameLayout.addView(new CameraPreview(this, camera));
+        customHandler.postDelayed(updateBitmap, 100);
 
-        customHandler.postDelayed(updateBitmap, 500);
+
+
+
+
     }
 
-
-//
     private Runnable updateBitmap = new Runnable() {
         public void run() {
             if (!isCameraBusy) {
@@ -180,73 +120,27 @@ public class CameraActivity extends AppCompatActivity {
                 camera.takePicture(null, null, mPicture);
             }
 //            customHandler.postDelayed(this, 1/60);
-            customHandler.postDelayed(this, 1000);
+            customHandler.postDelayed(this, 800);
         }
     };
 //
 
     private Camera.PictureCallback mPicture = (data, camera) -> {
         isCameraBusy = true;
-
-        Matrix matrix = new Matrix();
-        if (frontFacingCamera)
-            matrix.postRotate(-90);
-        else
-            matrix.postRotate(90);
-
         Bitmap decodedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        Bitmap rotatedBitmap = Bitmap.createBitmap(decodedBitmap, 0, 0, decodedBitmap.getWidth(), decodedBitmap.getHeight(), matrix, true);
 
-        bitmapToDisplay = getGrayscaleBitmap(getCroppedBitmap(rotatedBitmap));
+        Bitmap rotatedBitmap = ClassifierHandler.rotateBitmap(decodedBitmap, cameraFacingFront);
 
-//        Paint myPaint = new Paint();
-//        myPaint.setColor(Color.GREEN);
-//        myPaint.setStyle(Paint.Style.STROKE);
-//        myPaint.setStrokeWidth(1);
-//        Canvas canvas = new Canvas(bitmapToDisplay);
-        FaceDetector detector = new FaceDetector.Builder(this)
-                .setTrackingEnabled(false)
-                .setProminentFaceOnly(true)
-                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
-                .build();
-        Frame frame = new Frame.Builder().setBitmap(bitmapToDisplay).build();
+        Bitmap croppedBitmap = ClassifierHandler.getCroppedBitmap(rotatedBitmap);
+        Bitmap grayscaleBitmap = ClassifierHandler.getGrayscaleBitmap(croppedBitmap);
 
+        Bitmap faceDetectedBitmap;
+        if (detectFace) faceDetectedBitmap = ClassifierHandler.getFaceBitmap(this, grayscaleBitmap, showLandmarks);
+        else faceDetectedBitmap = grayscaleBitmap;
 
-        SparseArray<Face> faces = detector.detect(frame);
-        ArrayList<Bitmap> facesBitmaps = new ArrayList<>();
-        for (int i = 0; i < faces.size(); ++i) {
-            Face face = faces.valueAt(i);
-//            for (Landmark landmark : face.getLandmarks()) {
-//                int cx = (int) (landmark.getPosition().x);
-//                int cy = (int) (landmark.getPosition().y);
-//                canvas.drawCircle(cx, cy, 1, myPaint);
-//            }
+        bitmapToAnalyze = ClassifierHandler.getScaledBitmap(faceDetectedBitmap, imageSize);
 
-            int x = (int) (face.getPosition().x);
-            int y = (int) (face.getPosition().y);
-            int w = (int) (face.getWidth());
-            int h = (int) (face.getHeight());
-
-            boolean faceIsFine = true;
-            while (x < 0 || y < 0 || x + w > bitmapToDisplay.getWidth() || y + h > bitmapToDisplay.getHeight()) {
-                x++;
-                y++;
-                w--;
-                h--;
-                if (w <= 48 || h <= 48) {
-                    faceIsFine = false;
-                    break;
-                }
-            }
-
-            if (faceIsFine) bitmapToDisplay = Bitmap.createBitmap(bitmapToDisplay, x, y, w, h);
-        }
-
-        bitmapToDisplay = Bitmap.createScaledBitmap(bitmapToDisplay, 48, 48, true);
-
-        toAnalyzeImageView.setImageBitmap(bitmapToDisplay);
-
-        bitmapToAnalyze = bitmapToDisplay;
+        toAnalyzeImageView.setImageBitmap(bitmapToAnalyze);
 
         analyzeBitmap();
 
@@ -255,13 +149,10 @@ public class CameraActivity extends AppCompatActivity {
 
 
     private void analyzeBitmap() {
-        predictions = classifier.recognizeImage(bitmapToAnalyze);
-        StringBuilder ca = new StringBuilder();
+        ClassifierHandler.initialize(this, "FLOAT", "CPU", 4, imageSize);
+        List<Classifier.Recognition> predictions = ClassifierHandler.analyzeBitmap(bitmapToAnalyze);
 
-        float predictionStrength1, predictionStrength2, predictionStrength3;
-
-
-
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < predictions.size(); i++) {
             switch (i) {
                 case 0:
@@ -277,102 +168,13 @@ public class CameraActivity extends AppCompatActivity {
                     emotion3ProgressBar.setProgress((int) (predictions.get(i).getConfidence() * 100));
                     break;
             }
-            ca.append(predictions.get(i).getTitle()).append("(").append(String.format("%.2f", predictions.get(i).getConfidence())).append(")\n");
+            stringBuilder.append(predictions.get(i).getTitle()).append("(").append(String.format("%.2f", predictions.get(i).getConfidence())).append(")\n");
         }
 
-        String finalCa = ca.toString();
+        String finalCa = stringBuilder.toString();
         runOnUiThread(() ->
                 outputTextView.setText(finalCa));
     }
 
-
-    public Bitmap getGrayscaleBitmap(Bitmap bmpOriginal) {
-        int width, height;
-        height = bmpOriginal.getHeight();
-        width = bmpOriginal.getWidth();
-
-        Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(bmpGrayscale);
-        Paint paint = new Paint();
-        ColorMatrix cm = new ColorMatrix();
-        cm.setSaturation(0);
-        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-        paint.setColorFilter(f);
-        c.drawBitmap(bmpOriginal, 0, 0, paint);
-        return bmpGrayscale;
-    }
-
-
-    private static Bitmap getScaledBitmap(Bitmap bitmap, int size) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-
-        float scale;
-        Matrix matrix = new Matrix();
-        scale = (float) (size / width);
-        matrix.postScale(scale, scale);
-        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
-
-    }
-
-    private static Bitmap getCroppedBitmap(Bitmap bitmap) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        Bitmap b;
-        if (width < height) {
-            b = Bitmap.createBitmap(bitmap, 0, height / 2 - width / 2, width, width);
-            return Bitmap.createBitmap(b, 0, 0, width, width);
-        } else {
-            b = Bitmap.createBitmap(bitmap, width / 2 - height / 2, 0, height, height);
-            return Bitmap.createBitmap(b, 0, 0, height, height);
-        }
-    }
-
-    private void requestMultiplePermissions() {
-
-        String storagePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-        String cameraPermission = Manifest.permission.CAMERA;
-
-        int hasStoragePermission = ActivityCompat.checkSelfPermission(this, storagePermission);
-        int hasCameraPermission = ActivityCompat.checkSelfPermission(this, cameraPermission);
-
-        List<String> permissions = new ArrayList<>();
-        if (hasStoragePermission != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(storagePermission);
-        }
-
-        if (hasCameraPermission != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(cameraPermission);
-        }
-
-        if (!permissions.isEmpty()) {
-            String[] params = permissions.toArray(new String[permissions.size()]);
-            ActivityCompat.requestPermissions(this, params, PERMISSIONS_REQUEST);
-        }
-    }
-
-
-    public Camera getCameraInstance(boolean frontFacingCamera) {
-//        if (camera != null) camera.release();
-
-        Camera c = null;
-        try {
-//            if (frontFacingCamera)
-            c = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK); // attempt to get a Camera instance
-//            else
-//                c = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
-        } catch (Exception e) {
-            // Camera is not available (in use or does not exist)
-        }
-
-//        camera.startPreview();
-//        camera.setPreviewDisplay(previewHolder);
-
-//        CameraPreview cameraPreview = new CameraPreview(this, camera);
-//        FrameLayout cameraFrameLayout = findViewById(R.id.cameraFrameLayout);
-//        cameraFrameLayout.addView(cameraPreview);
-//        cameraFrameLayout.getLayoutParams().height = -1;
-        return c; // returns null if camera is unavailable
-    }
 
 }
