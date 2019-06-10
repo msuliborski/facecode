@@ -2,6 +2,7 @@ package com.facecoders.facecode.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
@@ -30,6 +31,11 @@ public class PhotoResultActivity extends AppCompatActivity {
     ProgressBar emotion2ProgressBar;
     ProgressBar emotion3ProgressBar;
 
+    Bitmap takenBitmap;
+    boolean cameraFacingFront = true;
+    boolean detectFace = true;
+    boolean showLandmarks = false;
+    int imageSize = 48;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +55,32 @@ public class PhotoResultActivity extends AppCompatActivity {
         emotion2ProgressBar = findViewById(R.id.emotion2ProgressBar);
         emotion3ProgressBar = findViewById(R.id.emotion3ProgressBar);
 
-        Intent intent = getIntent();
-        Bitmap takenBitmap = intent.getParcelableExtra("takenBitmap");
+        Intent intent = this.getIntent();
+        byte[] bytes = intent.getByteArrayExtra("bytes");
 
-        viewImageView.setImageBitmap(takenBitmap);
+        Bitmap rotatedBitmap = ClassifierHandler.rotateBitmap(
+                BitmapFactory.decodeByteArray(bytes, 0, bytes.length), true);
+        viewImageView.setImageBitmap(rotatedBitmap);
 
-        analyzeBitmap(ClassifierHandler.getScaledBitmap(takenBitmap, 48));
+        Bitmap grayscaleBitmap = ClassifierHandler.getGrayscaleBitmap(
+                ClassifierHandler.getCroppedBitmap(rotatedBitmap));
+
+//        ClassifierHandler.initialize(this, this, "FLOAT", "CPU", 4, 48);
+        Bitmap faceDetectedBitmap;
+        analyzedImageView.setImageBitmap(grayscaleBitmap);
+        if (detectFace) faceDetectedBitmap = ClassifierHandler.getFaceBitmap(grayscaleBitmap, showLandmarks);
+        else faceDetectedBitmap = grayscaleBitmap;
+
+        Bitmap toAnalyzeBitmap = ClassifierHandler.getScaledBitmap(faceDetectedBitmap, imageSize);
+
+        analyzedImageView.setImageBitmap(toAnalyzeBitmap);
+
+        analyzeBitmap(toAnalyzeBitmap);
     }
 
 
 
     private void analyzeBitmap(Bitmap bitmap) {
-        ClassifierHandler.initialize(this, "FLOAT", "CPU", 4, bitmap.getWidth());
         List<Classifier.Recognition> predictions = ClassifierHandler.analyzeBitmap(bitmap);
 
         for (int i = 0; i < predictions.size(); i++) {

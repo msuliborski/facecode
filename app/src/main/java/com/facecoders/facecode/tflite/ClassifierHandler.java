@@ -2,7 +2,6 @@ package com.facecoders.facecode.tflite;
 
 import android.app.Activity;
 import android.content.Context;
-import android.gesture.Prediction;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,9 +11,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.SparseArray;
 
-import com.facecoders.facecode.R;
-import com.facecoders.facecode.tflite.ClassifierHandler;
-import com.facecoders.facecode.tflite.Classifier;
 import com.facecoders.facecode.tflite.Classifier.Recognition;
 
 import com.google.android.gms.vision.Frame;
@@ -29,15 +25,32 @@ import java.util.List;
 
 public abstract class ClassifierHandler {
 
-    private static Classifier classifier;
+    private static Classifier classifier = null;
     private static List<Recognition> predictions = new ArrayList<>();
 
+    public static Paint myPaint = null;
+    public static FaceDetector detector = null;
 
-    public static void initialize(Activity activity, String model, String device, int numThreads, int imageSize) {
-        try {
-            classifier = Classifier.create(activity, Classifier.Model.valueOf(model), Classifier.Device.valueOf(device), numThreads, imageSize);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static void initialize(Context context, Activity activity, String model, String device, int numThreads, int imageSize) {
+        if (classifier == null) {
+            try {
+                classifier = Classifier.create(activity, Classifier.Model.valueOf(model), Classifier.Device.valueOf(device), numThreads, imageSize);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (classifier == null) {
+            myPaint = new Paint();
+            myPaint.setColor(Color.GREEN);
+            myPaint.setStyle(Paint.Style.STROKE);
+            myPaint.setStrokeWidth(1);
+        }
+        if (detector == null) {
+            detector = new FaceDetector.Builder(context)
+                    .setTrackingEnabled(false)
+                    .setProminentFaceOnly(true)
+                    .setLandmarkType(FaceDetector.ALL_LANDMARKS)
+                    .build();
         }
     }
 
@@ -58,20 +71,10 @@ public abstract class ClassifierHandler {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
-    public static Bitmap getFaceBitmap(Context context, Bitmap bitmap, boolean showLandmarks) {
-        Paint myPaint = new Paint();
-        myPaint.setColor(Color.GREEN);
-        myPaint.setStyle(Paint.Style.STROKE);
-        myPaint.setStrokeWidth(1);
+    public static Bitmap getFaceBitmap(Bitmap bitmap, boolean showLandmarks) {
         Canvas canvas = new Canvas(bitmap);
-
-        FaceDetector detector = new FaceDetector.Builder(context)
-                .setTrackingEnabled(false)
-                .setProminentFaceOnly(true)
-                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
-                .build();
+        System.out.println(bitmap.toString());
         Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-
 
         SparseArray<Face> faces = detector.detect(frame);
         for (int i = 0; i < faces.size(); ++i) {

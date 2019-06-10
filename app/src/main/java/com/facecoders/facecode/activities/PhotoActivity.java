@@ -24,11 +24,7 @@ public class PhotoActivity extends AppCompatActivity {
 
     FrameLayout cameraPreviewFrameLayout;
     ImageButton takePhotoImageButton;
-    Bitmap takenBitmap;
     boolean cameraFacingFront = true;
-    boolean detectFace = true;
-    boolean showLandmarks = false;
-    int imageSize = 48;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,43 +38,32 @@ public class PhotoActivity extends AppCompatActivity {
             camera.takePicture(null, null, mPicture);
         });
 
-        camera = CameraHandler.getCameraInstance(cameraFacingFront);
-        camera.setDisplayOrientation(90);
-        Camera.Parameters cameraParameters = camera.getParameters();
-        for (Camera.Size size : cameraParameters.getSupportedPictureSizes()) {
-            if (1080 <= size.width && size.height <= 1920) {
-                cameraParameters.setPictureSize(size.width, size.height);
-                break;
-            }
-        }
-        cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE); //It is better to use defined constraints as opposed to String, thanks to AbdelHady
-        camera.setParameters(cameraParameters);
-        cameraPreviewFrameLayout.addView(new CameraPreview(this, camera));
+//        camera = CameraHandler.getCameraInstance(cameraFacingFront);
+//        CameraHandler.setParameters();
+//        v.addView(new CameraPreview(this, camera));
+//        cameraPreview.
     }
 
-    private Camera.PictureCallback mPicture = (data, camera) -> {
-        //show animation
-        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-        Bitmap rotatedBitmap = ClassifierHandler.rotateBitmap(decodedBitmap, cameraFacingFront);
-
-        Bitmap croppedBitmap = ClassifierHandler.getCroppedBitmap(rotatedBitmap);
-        Bitmap grayscaleBitmap = ClassifierHandler.getGrayscaleBitmap(croppedBitmap);
-
-        Bitmap faceDetectedBitmap;
-        if (detectFace) faceDetectedBitmap = ClassifierHandler.getFaceBitmap(this, grayscaleBitmap, showLandmarks);
-        else faceDetectedBitmap = grayscaleBitmap;
-
-        takenBitmap = ClassifierHandler.getScaledBitmap(faceDetectedBitmap, imageSize);
-
+    private Camera.PictureCallback mPicture = (bytes, camera) -> {
+        cameraPreviewFrameLayout.removeAllViews();
+        camera.stopPreview();
         Intent intent = new Intent(this, PhotoResultActivity.class);
-        intent.putExtra("takenBitmap", takenBitmap);
+        intent.putExtra("bytes", bytes);
         startActivity(intent);
-
-//        Intent intent = new Intent(this, PhotoResultActivity.class);
-//        intent.putExtra("takenBitmap", faceDetectedBitmap);
-//        startActivity(intent);
     };
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cameraPreviewFrameLayout.removeAllViews();
+        camera.release();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        camera = CameraHandler.getCameraInstance(cameraFacingFront);
+        CameraHandler.setParameters();
+        cameraPreviewFrameLayout.addView(new CameraPreview(this, camera));
+    }
 }
