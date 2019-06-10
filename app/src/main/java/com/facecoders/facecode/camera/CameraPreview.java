@@ -1,4 +1,4 @@
-package com.facecoders.facecode;
+package com.facecoders.facecode.camera;
 
 import android.content.Context;
 import android.hardware.Camera;

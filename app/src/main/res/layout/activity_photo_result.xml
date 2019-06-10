@@ -8,15 +8,25 @@
 
 
     <ImageView
-        android:id="@+id/toAnalyzeImageView"
+        android:id="@+id/viewImageView"
         android:layout_width="0dp"
-        android:layout_height="600dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_height="400dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="8dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
+
+    <ImageView
+        android:id="@+id/analyzedImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.451"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewImageView" />
 
     <ImageView
         android:id="@+id/barsBackground"
@@ -73,7 +83,7 @@
 
     <TextView
         android:id="@+id/emotion1TextView"
-        android:layout_width="80dp"
+        android:layout_width="120dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
@@ -83,7 +93,7 @@
 
     <TextView
         android:id="@+id/emotion2TextView"
-        android:layout_width="80dp"
+        android:layout_width="120dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
@@ -93,7 +103,7 @@
 
     <TextView
         android:id="@+id/emotion3TextView"
-        android:layout_width="80dp"
+        android:layout_width="120dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"

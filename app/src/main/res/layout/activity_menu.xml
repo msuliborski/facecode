@@ -21,8 +21,8 @@
 
         <ImageButton
             android:id="@+id/photoImageButton"
-            android:layout_width="223dp"
-            android:layout_height="223dp"
+            android:layout_width="256dp"
+            android:layout_height="256dp"
             android:background="#00FFFFFF"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/photo_icon"
@@ -30,8 +30,8 @@
 
         <ImageButton
             android:id="@+id/cameraImageButton"
-            android:layout_width="223dp"
-            android:layout_height="223dp"
+            android:layout_width="256dp"
+            android:layout_height="256dp"
             android:adjustViewBounds="true"
             android:background="#00FFFFFF"
             android:scaleType="centerInside"
