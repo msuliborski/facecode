@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:context="com.facecoders.facecode.activities.CameraActivity"></FrameLayout>
+        tools:context="com.facecoders.facecode.activities.CameraActivity" />
 
 
     <ImageView
@@ -32,7 +32,7 @@
         android:layout_height="150dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textColor="@android:color/background_light"
+        android:textColor="@color/autisticBlue"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cameraPreviewFrameLayout" />
@@ -69,6 +69,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:progressTint="@color/autisticBlue"
         android:max="100"
         android:progress="50"
         app:layout_constraintBottom_toTopOf="@+id/emotion2ProgressBar"
@@ -83,6 +84,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:progressTint="@color/autisticBlue"
         android:max="100"
         android:progress="30"
         app:layout_constraintBottom_toTopOf="@+id/emotion3ProgressBar"
@@ -97,6 +99,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:progressTint="@color/autisticBlue"
         android:max="100"
         android:progress="20"
         app:layout_constraintBottom_toBottomOf="parent"

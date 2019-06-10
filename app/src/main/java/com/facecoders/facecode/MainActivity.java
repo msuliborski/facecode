@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -25,19 +26,18 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        requestMultiplePermissions();
-
-        ClassifierHandler.initialize(this, this, MODEL, DEVICE, NUMBER_OF_THREADS, IMAGE_SIZE);
-
-        Intent k = new Intent(this, MenuActivity.class);
-        startActivity(k);
+        if (requestMultiplePermissions()) {
+            ClassifierHandler.initialize(this, this, MODEL, DEVICE, NUMBER_OF_THREADS, IMAGE_SIZE);
+            Intent k = new Intent(this, MenuActivity.class);
+            startActivity(k);
+        }
     }
 
-    private void requestMultiplePermissions() {
+    private boolean requestMultiplePermissions() {
 
         String storagePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
         String cameraPermission = Manifest.permission.CAMERA;
@@ -58,5 +58,10 @@ public class MainActivity extends AppCompatActivity {
             String[] params = permissions.toArray(new String[permissions.size()]);
             ActivityCompat.requestPermissions(this, params, 108);
         }
+
+        if (hasStoragePermission != PackageManager.PERMISSION_GRANTED || hasCameraPermission != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
     }
 }
