@@ -7,10 +7,22 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.facecoders.facecode.activities.MenuActivity;
+import com.facecoders.facecode.tflite.ClassifierHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static int IMAGE_SIZE = 48;
+    public static String MODEL = "FLOAT";
+    public static String DEVICE = "CPU";
+    public static int NUMBER_OF_THREADS = 4;
+
+    public static String MODEL_PATH = "FLOAT";
+    public static String LABELS_PATH = "CPU";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -19,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
         requestMultiplePermissions();
 
-        Intent k = new Intent(this, com.facecoders.facecode.activities.CameraActivity.class);
+        ClassifierHandler.initialize(this, this, MODEL, DEVICE, NUMBER_OF_THREADS, IMAGE_SIZE);
+
+        Intent k = new Intent(this, MenuActivity.class);
         startActivity(k);
     }
 
