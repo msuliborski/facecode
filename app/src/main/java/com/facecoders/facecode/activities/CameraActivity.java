@@ -52,7 +52,7 @@ public class CameraActivity extends AppCompatActivity {
     private boolean cameraFacingFront = false;
     private boolean isCameraBusy = false;
     private boolean showLandmarks = false;
-    private boolean detectFace = false;
+    private boolean detectFace = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,9 +108,8 @@ public class CameraActivity extends AppCompatActivity {
                         ClassifierHandler.rotateBitmap(
                                 BitmapFactory.decodeByteArray(bytes, 0, bytes.length), cameraFacingFront)));
 
-        Bitmap faceDetectedBitmap;
+        Bitmap faceDetectedBitmap = grayscaleBitmap;
         if (detectFace) faceDetectedBitmap = ClassifierHandler.getFaceBitmap(grayscaleBitmap, showLandmarks);
-        else faceDetectedBitmap = grayscaleBitmap;
 
         bitmapToAnalyze = ClassifierHandler.getScaledBitmap(faceDetectedBitmap, imageSize);
 

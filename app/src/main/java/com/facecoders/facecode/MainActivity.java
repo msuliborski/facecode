@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.facecoders.facecode.activities.MenuActivity;
+import com.facecoders.facecode.activities.WelcomeActivity;
 import com.facecoders.facecode.tflite.ClassifierHandler;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestMultiplePermissions()) {
             ClassifierHandler.initialize(this, this, MODEL, DEVICE, NUMBER_OF_THREADS, IMAGE_SIZE);
-            Intent k = new Intent(this, MenuActivity.class);
+            Intent k = new Intent(this, WelcomeActivity.class);
             startActivity(k);
         }
     }

@@ -31,7 +31,6 @@ public class PhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
 
-        camera = CameraHandler.getCameraInstance(cameraFacingFront);
         cameraPreviewFrameLayout = findViewById(R.id.cameraPreviewFrameLayout);
         takePhotoImageButton = findViewById(R.id.takePhotoImageButton);
         takePhotoImageButton.setOnClickListener(v -> {
