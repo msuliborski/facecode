@@ -18,8 +18,8 @@
 
         <ImageButton
             android:id="@+id/photoImageButton"
-            android:layout_width="256dp"
-            android:layout_height="256dp"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
             android:background="#00FFFFFF"
             android:scaleType="centerInside"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,16 +43,16 @@
 
         <ImageButton
             android:id="@+id/realtimeImageButton"
-            android:layout_width="256dp"
-            android:layout_height="256dp"
-            android:layout_marginTop="50dp"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_marginTop="24dp"
             android:adjustViewBounds="true"
             android:background="#00FFFFFF"
             android:scaleType="centerInside"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/photoTextView"
-            app:srcCompat="@drawable/camera_icon" />
+            app:srcCompat="@drawable/camera" />
 
         <TextView
             android:id="@+id/realtimeTextView"
