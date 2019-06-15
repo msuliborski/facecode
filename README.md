@@ -3,9 +3,10 @@ Application that can detect emotions in real time just from camera feedback usin
 Model has been created in Python using TensorFlow and converted to .tflite format.<br/>
 
 <p align="center">
-  <img width="280" src="images/1.jpg">
-  <img width="280" src="images/2.jpg">
-  <img width="280" src="images/3.jpg">
+  <img width="220" src="images/1.jpg">
+  <img width="220" src="images/2.jpg">
+  <img width="220" src="images/3.jpg">
+  <img width="220" src="images/4.jpg">
 </p>
 
 ## Getting Started
@@ -34,10 +35,12 @@ Simply run the application and point camera on somebody's face. Detected emotion
 
 * [Android Studio](https://developer.android.com/studio) - the fastest tools for building apps on every type of Android device.
 
-
 ## Authors
 
 * **Michał Suliborski** - [msuliborski](https://github.com/msuliborski)
+* **Anna Preczyńska** - [preczu](https://github.com/preczu)
+* **Mariusz Pisarski** - [mariuszpisarski0](https://github.com/mariuszpisarski0)
+* **Yura Shcheholiev** - [yurii-shcheholiev](https://github.com/yurii-shcheholiev)
 
 ## License
 
