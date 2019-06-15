@@ -50,10 +50,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/photo_icon" />
+            app:srcCompat="@drawable/photo_button"
+            android:contentDescription="@string/takePhotoButton" />
 
         <ImageButton
-            android:id="@+id/switchCameraImageButton"
+            android:id="@+id/changeCameraImageButton"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_marginStart="8dp"
@@ -64,7 +65,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/takePhotoImageButton"
             app:layout_constraintTop_toTopOf="@+id/takePhotoImageButton"
-            app:srcCompat="@drawable/change_camera" />
+            app:srcCompat="@drawable/change_camera_button"
+            android:contentDescription="@string/changeCameraButton" />
 
         <ImageButton
             android:id="@+id/pickFromGalleryImageButton"
@@ -78,7 +80,8 @@
             app:layout_constraintEnd_toStartOf="@+id/takePhotoImageButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/takePhotoImageButton"
-            app:srcCompat="@drawable/common_full_open_on_phone" />
+            app:srcCompat="@drawable/common_full_open_on_phone"
+            android:contentDescription="@string/pickPhotoFromGalleryButton" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

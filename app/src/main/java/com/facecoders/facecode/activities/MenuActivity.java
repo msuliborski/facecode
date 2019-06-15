@@ -18,7 +18,7 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
 
         photoImageButton = findViewById(R.id.photoImageButton);
-        cameraImageButton = findViewById(R.id.realtimeImageButton);
+        cameraImageButton = findViewById(R.id.realtimeImageText);
 
         photoImageButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, PhotoActivity.class);

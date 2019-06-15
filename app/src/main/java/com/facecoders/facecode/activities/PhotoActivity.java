@@ -49,7 +49,7 @@ public class PhotoActivity extends AppCompatActivity {
             camera2BasicFragment.takePicture();
         });
 
-        findViewById(R.id.switchCameraImageButton).setOnClickListener(v -> {
+        findViewById(R.id.changeCameraImageButton).setOnClickListener(v -> {
             cameraFacingFront = !cameraFacingFront;
             camera2BasicFragment.switchCamera(cameraFacingFront, false);
         });

@@ -11,13 +11,13 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.SparseArray;
 
-import com.facecoders.facecode.tflite.Classifier.Recognition;
-
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.Landmark;
 
+import com.facecoders.facecode.tflite.Classifier.Device;
+import com.facecoders.facecode.tflite.Classifier.Model;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,21 +31,19 @@ public abstract class ClassifierHandler {
     public static Paint myPaint = null;
     public static FaceDetector detector = null;
 
-    public static void initialize(Context context, Activity activity, String model, String device, int numThreads, int imageSize) {
+    public static void initialize(Context context, Activity activity, Model model, Device device, int numThreads, int imageSize, String modelPath, String labelsPath) {
         if (classifier == null) {
             try {
-                classifier = Classifier.create(activity, Classifier.Model.valueOf(model), Classifier.Device.valueOf(device), numThreads, imageSize);
+                classifier = Classifier.getInstance(activity, model, device, numThreads, imageSize, modelPath, labelsPath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        if (classifier == null) {
+
             myPaint = new Paint();
-            myPaint.setColor(Color.GREEN);
+            myPaint.setColor(Color.rgb(79, 145, 205));
             myPaint.setStyle(Paint.Style.STROKE);
             myPaint.setStrokeWidth(1);
-        }
-        if (detector == null) {
+
             detector = new FaceDetector.Builder(context)
                     .setTrackingEnabled(false)
                     .setProminentFaceOnly(true)
@@ -57,7 +55,7 @@ public abstract class ClassifierHandler {
     public static List<Recognition> analyzeBitmap(Bitmap bitmap){
         predictions.clear();
         predictions = classifier.recognizeImage(bitmap);
-        return  predictions;
+        return predictions;
     }
 
 

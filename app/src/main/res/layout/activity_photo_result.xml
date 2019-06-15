@@ -21,7 +21,8 @@
             android:layout_height="600dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/originalPhoto" />
 
         <ImageView
             android:id="@+id/analyzedImageView"
@@ -30,7 +31,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="@+id/viewImageView"
-            app:layout_constraintTop_toTopOf="@+id/viewImageView" />
+            app:layout_constraintTop_toTopOf="@+id/viewImageView"
+            android:contentDescription="@string/analyzedPhoto" />
     </android.support.constraint.ConstraintLayout>
 
 
@@ -94,7 +96,7 @@
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Detecting..."
+            android:text="@string/emotionTextViewPlaceholder"
             android:textColor="#FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/emotion1TextView" />
@@ -105,7 +107,7 @@
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Detecting..."
+            android:text="@string/emotionTextViewPlaceholder"
             android:textColor="#FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -117,7 +119,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Detecting..."
+            android:text="@string/emotionTextViewPlaceholder"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

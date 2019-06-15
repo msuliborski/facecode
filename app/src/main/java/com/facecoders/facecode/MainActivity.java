@@ -5,25 +5,20 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.facecoders.facecode.activities.MenuActivity;
 import com.facecoders.facecode.activities.WelcomeActivity;
+import com.facecoders.facecode.tflite.Classifier;
+import com.facecoders.facecode.tflite.Classifier.Model;
+import com.facecoders.facecode.tflite.Classifier.Device;
 import com.facecoders.facecode.tflite.ClassifierHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static int IMAGE_SIZE = 48;
-    public static String MODEL = "FLOAT";
-    public static String DEVICE = "CPU";
-    public static int NUMBER_OF_THREADS = 4;
 
-    public static String MODEL_PATH = "FLOAT";
-    public static String LABELS_PATH = "CPU";
 
 
     @Override
@@ -31,38 +26,48 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (requestMultiplePermissions()) {
-            ClassifierHandler.initialize(this, this, MODEL, DEVICE, NUMBER_OF_THREADS, IMAGE_SIZE);
-            Intent k = new Intent(this, WelcomeActivity.class);
-            startActivity(k);
+        int imageSize = 48;
+//        int imageSize = 224;
+
+        Model modelVariant = Model.FLOAT;
+//        Model modelVariant = Model.QUANTIZED;
+
+        Device deviceVariant = Device.CPU;
+//        Device deviceVariant = Device.GPU;
+
+        int numberOfThreads = 4;
+//        int numberOfThreads = 8;
+
+//        String modelPath = "model-20-10.tflite";
+//        String modelPath = "model-50-20.tflite";
+        String modelPath = "model-150-60.tflite";
+//        String modelPath = "model-180-50.tflite";
+
+
+        String labelsPath = "labels.txt";
+
+        ClassifierHandler.initialize(this, this, modelVariant, deviceVariant, numberOfThreads, imageSize, modelPath, labelsPath);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+            }
+        } else {
+            startActivity(new Intent(this, WelcomeActivity.class));
         }
     }
 
-    private boolean requestMultiplePermissions() {
-
-        String storagePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-        String cameraPermission = Manifest.permission.CAMERA;
-
-        int hasStoragePermission = ActivityCompat.checkSelfPermission(this, storagePermission);
-        int hasCameraPermission = ActivityCompat.checkSelfPermission(this, cameraPermission);
-
-        List<String> permissions = new ArrayList<>();
-        if (hasStoragePermission != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(storagePermission);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(new Intent(this, WelcomeActivity.class));
+                } else {
+                    startActivity(new Intent(this, MainActivity.class));
+                }
+            }
         }
-
-        if (hasCameraPermission != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(cameraPermission);
-        }
-
-        if (!permissions.isEmpty()) {
-            String[] params = permissions.toArray(new String[permissions.size()]);
-            ActivityCompat.requestPermissions(this, params, 108);
-        }
-
-        if (hasStoragePermission != PackageManager.PERMISSION_GRANTED || hasCameraPermission != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
     }
 }

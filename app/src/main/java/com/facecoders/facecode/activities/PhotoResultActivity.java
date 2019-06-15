@@ -11,8 +11,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facecoders.facecode.R;
-import com.facecoders.facecode.tflite.Classifier;
 import com.facecoders.facecode.tflite.ClassifierHandler;
+import com.facecoders.facecode.tflite.Recognition;
 
 import java.util.List;
 
@@ -82,7 +82,7 @@ public class PhotoResultActivity extends AppCompatActivity {
 
 
     private void analyzeBitmap(Bitmap bitmap) {
-        List<Classifier.Recognition> predictions = ClassifierHandler.analyzeBitmap(bitmap);
+        List<Recognition> predictions = ClassifierHandler.analyzeBitmap(bitmap);
 
         for (int i = 0; i < predictions.size(); i++) {
             switch (i) {
