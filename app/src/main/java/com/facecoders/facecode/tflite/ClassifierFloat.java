@@ -20,7 +20,7 @@ import android.app.Activity;
 import java.io.IOException;
 
 /** This TensorFlowLite classifier works with the float MobileNet model. */
-public class ClassifierFloatMobileNet extends Classifier {
+public class ClassifierFloat extends Classifier {
 
   /** MobileNet requires additional normalization of the used input. */
   private static final float IMAGE_MEAN = 127.5f;
@@ -37,23 +37,10 @@ public class ClassifierFloatMobileNet extends Classifier {
    *
    * @param activity
    */
-  public ClassifierFloatMobileNet(Activity activity, Device device, int numThreads)
+  public ClassifierFloat(Activity activity, Device device, int numThreads)
       throws IOException {
     super(activity, device, numThreads);
     labelProbArray = new float[1][getNumLabels()];
-  }
-
-  @Override
-  protected String getModelPath() {
-    // you can download this file from
-    // see build.gradle for where to obtain this file. It should be auto
-    // downloaded into assets.
-    return "model-50-20.tflite";
-  }
-
-  @Override
-  protected String getLabelPath() {
-    return "labels.txt";
   }
 
   @Override

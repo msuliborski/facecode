@@ -1,8 +1,16 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Facecode</string>
-    <string name="facecoders_name">FACECODERS</string>
-    <string name="picture">Picture</string>
-    <string name="description_info">Info</string>
-    <string name="request_permission">This sample needs camera permission.</string>
-    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="facecoders_name_logo">FACECODERS</string>
+
+    <string name="analyzedPhoto">analyzedPhoto</string>
+    <string name="emotionTextViewPlaceholder" tools:ignore="TypographyEllipsis">Detecting...</string>
+    <string name="realtimeAnalysisButton">REALTIME ANALYSIS</string>
+    <string name="photoAnalysisText">PHOTO ANALYSIS</string>
+    <string name="realtimeAnalyzeButton">realtimeAnalyzeButton</string>
+    <string name="photoAnalyzeButton">photoAnalyzeButton</string>
+    <string name="changeCameraButton">changeCameraButton</string>
+    <string name="takePhotoButton">takePhotoButton</string>
+    <string name="pickPhotoFromGalleryButton">pickPhotoFromGalleryButton</string>
+    <string name="originalPhoto">originalPhoto</string>
+
 </resources>

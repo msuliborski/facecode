@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.facecoders.facecode.R;
 import com.facecoders.facecode.camera.CameraHandler;
 import com.facecoders.facecode.camera.CameraPreview;
-import com.facecoders.facecode.tflite.Classifier.Recognition;
+import com.facecoders.facecode.tflite.Recognition;
 import com.facecoders.facecode.tflite.ClassifierHandler;
 
 import java.util.List;

@@ -25,14 +25,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/photo_icon"
-            tools:srcCompat="@drawable/photo_icon" />
+            app:srcCompat="@drawable/photo_button"
+            android:contentDescription="@string/photoAnalyzeButton" />
 
         <TextView
             android:id="@+id/photoTextView"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="PHOTO ANALYSIS"
+            android:text="@string/photoAnalysisText"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="26sp"
@@ -42,7 +42,7 @@
             app:layout_constraintTop_toBottomOf="@+id/photoImageButton" />
 
         <ImageButton
-            android:id="@+id/realtimeImageButton"
+            android:id="@+id/realtimeImageText"
             android:layout_width="220dp"
             android:layout_height="220dp"
             android:layout_marginTop="24dp"
@@ -52,19 +52,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/photoTextView"
-            app:srcCompat="@drawable/camera" />
+            app:srcCompat="@drawable/realtime_button"
+            android:contentDescription="@string/realtimeAnalyzeButton" />
 
         <TextView
             android:id="@+id/realtimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="REAL-TIME ANALYSIS"
+            android:text="@string/realtimeAnalysisButton"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="26sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/realtimeImageButton" />
+            app:layout_constraintTop_toBottomOf="@+id/realtimeImageText" />
 
     </android.support.constraint.ConstraintLayout>
 
