@@ -22,7 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -35,20 +34,19 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/cameraPreviewFrameLayout" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/outputConstraintLayout"
-        android:layout_width="395dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/autisticBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cameraConstraintLayout">
+        app:layout_constraintStart_toStartOf="parent">
 
         <ProgressBar
             android:id="@+id/emotion2ProgressBar"
@@ -59,7 +57,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:max="100"
-            android:progress="30"
+            android:progress="100"
             android:progressTint="#FFFFFF"
             app:layout_constraintEnd_toStartOf="@+id/changeCameraImageButton"
             app:layout_constraintStart_toEndOf="@+id/emotion2TextView"
@@ -74,7 +72,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:max="100"
-            android:progress="20"
+            android:progress="100"
             android:progressTint="#FFFFFF"
             app:layout_constraintEnd_toStartOf="@+id/changeCameraImageButton"
             app:layout_constraintStart_toEndOf="@+id/emotion3TextView"
@@ -89,7 +87,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:max="100"
-            android:progress="50"
+            android:progress="100"
             android:progressTint="#FFFFFF"
             app:layout_constraintEnd_toStartOf="@+id/changeCameraImageButton"
             app:layout_constraintStart_toEndOf="@+id/emotion1TextView"
@@ -101,7 +99,7 @@
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="123"
+            android:text="Detecting..."
             android:textColor="#FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/emotion1TextView" />
@@ -112,7 +110,7 @@
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="123"
+            android:text="Detecting..."
             android:textColor="#FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -124,7 +122,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="123"
+            android:text="Detecting..."
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

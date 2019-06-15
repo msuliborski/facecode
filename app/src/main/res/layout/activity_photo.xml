@@ -6,62 +6,79 @@
     android:layout_height="match_parent"
     android:background="@color/autisticBlue">
 
-    <FrameLayout
-        android:id="@+id/cameraPreviewFrameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/black"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cameraConstraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="600dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:context="com.facecoders.facecode.activities.PhotoActivity">
+        app:layout_constraintTop_toTopOf="parent">
 
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/cameraPreviewFrameLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context="com.facecoders.facecode.activities.PhotoActivity">
 
-    <ImageButton
-        android:id="@+id/takePhotoImageButton"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="#00FFFFFF"
-        android:scaleType="centerInside"
+        </FrameLayout>
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/buttonsConstraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/autisticBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cameraPreviewFrameLayout"
-        app:srcCompat="@drawable/photo_icon" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageButton
-        android:id="@+id/pickFromGalleryImageButton"
-        android:layout_width="68dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="#00FFFFFF"
-        android:scaleType="centerInside"
-        app:layout_constraintBottom_toBottomOf="@+id/takePhotoImageButton"
-        app:layout_constraintEnd_toStartOf="@+id/takePhotoImageButton"
-        app:layout_constraintStart_toStartOf="@+id/cameraPreviewFrameLayout"
-        app:layout_constraintTop_toTopOf="@+id/takePhotoImageButton"
-        app:layout_constraintVertical_bias="0.507"
-        app:srcCompat="@drawable/common_full_open_on_phone" />
+        <ImageButton
+            android:id="@+id/takePhotoImageButton"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/photo_icon" />
 
-    <ImageButton
-        android:id="@+id/switchCameraImageButton"
-        android:layout_width="68dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="#00FFFFFF"
-        android:scaleType="centerInside"
-        app:layout_constraintBottom_toBottomOf="@+id/takePhotoImageButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/takePhotoImageButton"
-        app:layout_constraintTop_toTopOf="@+id/takePhotoImageButton"
-        app:srcCompat="@drawable/change_camera" />
+        <ImageButton
+            android:id="@+id/switchCameraImageButton"
+            android:layout_width="68dp"
+            android:layout_height="63dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="@+id/takePhotoImageButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/takePhotoImageButton"
+            app:layout_constraintTop_toTopOf="@+id/takePhotoImageButton"
+            app:srcCompat="@drawable/change_camera" />
+
+        <ImageButton
+            android:id="@+id/pickFromGalleryImageButton"
+            android:layout_width="68dp"
+            android:layout_height="63dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="@+id/takePhotoImageButton"
+            app:layout_constraintEnd_toStartOf="@+id/takePhotoImageButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/takePhotoImageButton"
+            app:srcCompat="@drawable/common_full_open_on_phone" />
+    </android.support.constraint.ConstraintLayout>
+
 </android.support.constraint.ConstraintLayout>
