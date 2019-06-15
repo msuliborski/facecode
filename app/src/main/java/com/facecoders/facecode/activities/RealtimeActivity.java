@@ -28,7 +28,6 @@ public class RealtimeActivity extends AppCompatActivity {
 
     FrameLayout cameraPreviewFrameLayout;
 
-    TextView outputTextView;
     ImageView toAnalyzeImageView;
 
     TextView emotion1TextView;
@@ -151,7 +150,9 @@ public class RealtimeActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        customHandler.removeCallbacks(updateBitmap);
         cameraPreviewFrameLayout.removeAllViews();
+        isCameraBusy = true;
         camera.release();
     }
 
@@ -161,6 +162,15 @@ public class RealtimeActivity extends AppCompatActivity {
         camera = CameraHandler.getCameraInstance(cameraFacingFront);
         CameraHandler.setParameters();
         cameraPreviewFrameLayout.addView(new CameraPreview(this, camera));
+        isCameraBusy = false;
+        emotion1TextView.setText("Detecting...");
+        emotion2TextView.setText("Detecting...");
+        emotion3TextView.setText("Detecting...");
+        emotion1ProgressBar.setProgress(100);
+        emotion2ProgressBar.setProgress(100);
+        emotion3ProgressBar.setProgress(100);
+
+        customHandler.postDelayed(updateBitmap, 500);
     }
 
 }
