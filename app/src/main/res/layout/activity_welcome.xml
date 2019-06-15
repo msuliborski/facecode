@@ -8,8 +8,8 @@
 
     <ImageButton
         android:id="@+id/candidImageButton"
-        android:layout_width="213dp"
-        android:layout_height="215dp"
+        android:layout_width="256dp"
+        android:layout_height="256dp"
         android:background="#00FFFFFF"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -34,17 +34,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/candidImageButton" />
 
-    <Button
-        android:id="@+id/tempButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginEnd="8dp"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/facecodersNameTextView" />
 </android.support.constraint.ConstraintLayout>
 
 

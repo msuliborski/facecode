@@ -37,7 +37,7 @@
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
         <activity
-            android:name=".activities.CameraActivity"
+            android:name=".activities.RealtimeActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
         <activity
@@ -46,10 +46,6 @@
             android:configChanges="orientation|keyboardHidden"/>
         <activity
             android:name=".activities.PhotoResultActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden"/>
-        <activity
-            android:name=".activities.Camera2Activity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
     </application>
