@@ -107,7 +107,6 @@ public class RealtimeActivity extends AppCompatActivity {
     private Camera.PictureCallback mPicture = (bytes, camera) -> {
         isCameraBusy = true;
 
-        System.out.println("mam foto");
         Bitmap grayscaleBitmap = ClassifierHandler.getGrayscaleBitmap(
                 ClassifierHandler.getCroppedBitmap(
                         ClassifierHandler.rotateBitmap(
