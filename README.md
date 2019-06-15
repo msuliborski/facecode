@@ -3,10 +3,10 @@ Application that can detect emotions in real time just from camera feedback usin
 Model has been created in Python using TensorFlow and converted to .tflite format.<br/>
 
 <p align="center">
-  <img width="220" src="images/1.jpg">
-  <img width="220" src="images/2.jpg">
-  <img width="220" src="images/3.jpg">
-  <img width="220" src="images/4.jpg">
+  <img width="210" src="images/1.jpg">
+  <img width="210" src="images/2.jpg">
+  <img width="210" src="images/3.jpg">
+  <img width="210" src="images/4.jpg">
 </p>
 
 ## Getting Started
