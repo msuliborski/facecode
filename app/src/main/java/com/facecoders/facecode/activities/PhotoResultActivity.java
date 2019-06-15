@@ -57,15 +57,16 @@ public class PhotoResultActivity extends AppCompatActivity {
 
         Intent intent = this.getIntent();
         byte[] bytes = intent.getByteArrayExtra("bytes");
+        cameraFacingFront = intent.getBooleanExtra("cameraFacingFront", true);
+
 
         Bitmap rotatedBitmap = ClassifierHandler.rotateBitmap(
-                BitmapFactory.decodeByteArray(bytes, 0, bytes.length), true);
+                BitmapFactory.decodeByteArray(bytes, 0, bytes.length), cameraFacingFront);
         viewImageView.setImageBitmap(rotatedBitmap);
 
         Bitmap grayscaleBitmap = ClassifierHandler.getGrayscaleBitmap(
                 ClassifierHandler.getCroppedBitmap(rotatedBitmap));
 
-//        ClassifierHandler.initialize(this, this, "FLOAT", "CPU", 4, 48);
         Bitmap faceDetectedBitmap;
         analyzedImageView.setImageBitmap(grayscaleBitmap);
         if (detectFace) faceDetectedBitmap = ClassifierHandler.getFaceBitmap(grayscaleBitmap, showLandmarks);

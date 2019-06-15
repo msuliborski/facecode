@@ -11,7 +11,6 @@ import com.facecoders.facecode.R;
 public class WelcomeActivity extends AppCompatActivity {
 
     ImageButton candidImageButton;
-    Button tempButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +22,13 @@ public class WelcomeActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MenuActivity.class);
             startActivity(intent);
         });
-        tempButton = findViewById(R.id.tempButton);
-        tempButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, Camera2Activity.class);
-            startActivity(intent);
-        });
-
     }
 
+    @Override
+    public void onBackPressed(){
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
+    }
 }

@@ -20,7 +20,7 @@ import com.facecoders.facecode.tflite.ClassifierHandler;
 import java.util.List;
 
 
-public class CameraActivity extends AppCompatActivity {
+public class RealtimeActivity extends AppCompatActivity {
 
     private Camera camera;
 
@@ -56,12 +56,12 @@ public class CameraActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
         cameraPreviewFrameLayout = findViewById(R.id.cameraPreviewFrameLayout);
 
-        outputTextView = findViewById(R.id.outputTextView);
         toAnalyzeImageView = findViewById(R.id.viewImageView);
 
         emotion1TextView = findViewById(R.id.emotion1TextView);
@@ -72,6 +72,12 @@ public class CameraActivity extends AppCompatActivity {
         emotion3ProgressBar = findViewById(R.id.emotion3ProgressBar);
 
         changeCameraImageButton = findViewById(R.id.changeCameraImageButton);
+        changeCameraImageButton.setOnClickListener(v -> {
+
+        });
+
+        camera = CameraHandler.getCameraInstance(cameraFacingFront);
+
         changeCameraImageButton.setOnClickListener(v -> {
             customHandler.removeCallbacks(updateBitmap);
 
@@ -97,7 +103,7 @@ public class CameraActivity extends AppCompatActivity {
             customHandler.postDelayed(this, 500);
         }
     };
-//
+
 
     private Camera.PictureCallback mPicture = (bytes, camera) -> {
         isCameraBusy = true;
@@ -109,7 +115,8 @@ public class CameraActivity extends AppCompatActivity {
                                 BitmapFactory.decodeByteArray(bytes, 0, bytes.length), cameraFacingFront)));
 
         Bitmap faceDetectedBitmap = grayscaleBitmap;
-        if (detectFace) faceDetectedBitmap = ClassifierHandler.getFaceBitmap(grayscaleBitmap, showLandmarks);
+        if (detectFace)
+            faceDetectedBitmap = ClassifierHandler.getFaceBitmap(grayscaleBitmap, showLandmarks);
 
         bitmapToAnalyze = ClassifierHandler.getScaledBitmap(faceDetectedBitmap, imageSize);
 
@@ -123,8 +130,6 @@ public class CameraActivity extends AppCompatActivity {
 
     private void analyzeBitmap() {
         List<Recognition> predictions = ClassifierHandler.analyzeBitmap(bitmapToAnalyze);
-
-        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < predictions.size(); i++) {
             switch (i) {
                 case 0:
@@ -140,12 +145,7 @@ public class CameraActivity extends AppCompatActivity {
                     emotion3ProgressBar.setProgress((int) (predictions.get(i).getConfidence() * 100));
                     break;
             }
-            stringBuilder.append(predictions.get(i).getTitle()).append("(").append(String.format("%.2f", predictions.get(i).getConfidence())).append(")\n");
         }
-
-        String finalCa = stringBuilder.toString();
-        runOnUiThread(() ->
-                outputTextView.setText(finalCa));
     }
 
     @Override
