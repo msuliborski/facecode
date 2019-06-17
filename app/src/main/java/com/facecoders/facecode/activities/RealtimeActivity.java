@@ -40,13 +40,10 @@ public class RealtimeActivity extends AppCompatActivity {
 
     ImageButton changeCameraImageButton;
 
-    Bitmap croppedBitmap;
     Bitmap bitmapToAnalyze;
-    Bitmap bitmapToDisplay;
 
 
     android.os.Handler customHandler = new android.os.Handler();
-    android.os.Handler customHandler2 = new android.os.Handler();
 
     private boolean cameraFacingFront = false;
     private boolean isCameraBusy = false;
@@ -85,6 +82,14 @@ public class RealtimeActivity extends AppCompatActivity {
             camera = CameraHandler.getCameraInstance(cameraFacingFront);
             CameraHandler.setParameters();
             cameraPreviewFrameLayout.addView(new CameraPreview(this, camera));
+
+            isCameraBusy = false;
+            emotion1TextView.setText(R.string.emotionTextViewPlaceholder);
+            emotion2TextView.setText(R.string.emotionTextViewPlaceholder);
+            emotion3TextView.setText(R.string.emotionTextViewPlaceholder);
+            emotion1ProgressBar.setProgress(100);
+            emotion2ProgressBar.setProgress(100);
+            emotion3ProgressBar.setProgress(100);
 
             customHandler.postDelayed(updateBitmap, 500);
         });
@@ -162,9 +167,9 @@ public class RealtimeActivity extends AppCompatActivity {
         CameraHandler.setParameters();
         cameraPreviewFrameLayout.addView(new CameraPreview(this, camera));
         isCameraBusy = false;
-        emotion1TextView.setText("Detecting...");
-        emotion2TextView.setText("Detecting...");
-        emotion3TextView.setText("Detecting...");
+        emotion1TextView.setText(R.string.emotionTextViewPlaceholder);
+        emotion2TextView.setText(R.string.emotionTextViewPlaceholder);
+        emotion3TextView.setText(R.string.emotionTextViewPlaceholder);
         emotion1ProgressBar.setProgress(100);
         emotion2ProgressBar.setProgress(100);
         emotion3ProgressBar.setProgress(100);
