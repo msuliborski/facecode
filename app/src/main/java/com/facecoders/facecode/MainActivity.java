@@ -9,17 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.facecoders.facecode.activities.MenuActivity;
 import com.facecoders.facecode.activities.WelcomeActivity;
-import com.facecoders.facecode.tflite.Classifier;
 import com.facecoders.facecode.tflite.Classifier.Model;
 import com.facecoders.facecode.tflite.Classifier.Device;
 import com.facecoders.facecode.tflite.ClassifierHandler;
 
 public class MainActivity extends AppCompatActivity {
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
