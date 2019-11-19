@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.facecoders.facecode"
-        minSdkVersion 26
+        minSdkVersion 20
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -16,11 +16,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
-    }
-
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
@@ -32,33 +27,30 @@ android {
         exclude 'META-INF/ASL2.0'
         exclude 'META-INF/INDEX.LIST'
     }
+    aaptOptions {
+        noCompress "tflite"
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
-
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:customtabs:28.0.0'
     implementation 'com.android.support:support-vector-drawable:28.0.0'
     implementation 'com.android.support:support-media-compat:28.0.0'
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.google.android.gms:play-services-vision:17.0.2'
 
-    implementation 'com.google.cloud:google-cloud-vision:1.73.0'
-    implementation 'com.google.auth:google-auth-library-appengine:0.15.0'
-    implementation 'com.google.cloud:google-cloud-storage:1.73.0'
+    implementation 'org.tensorflow:tensorflow-lite:1.13.1'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:0.0.0-nightly'
+    implementation 'org.tensorflow:tensorflow-android:1.5.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
-
-task copySecretKey(type: Copy) {
-    def File secretKey = file "$System.env.GOOGLE_APPLICATION_CREDENTIALS"
-    from secretKey.getParent()
-    include secretKey.getName()
-    into 'src/main/res/raw'
-    rename secretKey.getName(), "facecode-key.json"
-}
-preBuild.dependsOn(copySecretKey)
