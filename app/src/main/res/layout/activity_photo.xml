@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/autisticBlue">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.ConstraintLayout
         android:id="@+id/cameraConstraintLayout"
         android:layout_width="0dp"
         android:layout_height="600dp"
@@ -25,9 +25,9 @@
             tools:context="com.facecoders.facecode.activities.PhotoActivity">
 
         </FrameLayout>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.ConstraintLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.ConstraintLayout
         android:id="@+id/buttonsConstraintLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -82,6 +82,6 @@
             app:layout_constraintTop_toTopOf="@+id/takePhotoImageButton"
             app:srcCompat="@drawable/common_full_open_on_phone"
             android:contentDescription="@string/pickPhotoFromGalleryButton" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.ConstraintLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.ConstraintLayout>
