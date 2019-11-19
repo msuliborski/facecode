@@ -26,9 +26,14 @@ In order to properly build application one might need to install [Android Studio
 ```
 $ git clone https://github.com/msuliborski/facecode
 ```
+
 ### Database 
 Dataset was downloaded from kaggle website. It is available here: </br>
 [Challenges in Representation Learning: Facial Expression Recognition Challenge](https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge)
+
+### Model
+Trained model is available here:
+[app/src/main/assets](app/src/main/assets)
 
 ### Building
 Open project in Android Studio and install all dependencies needed. Currently project is compatible with Android 10 (SDK 29).
@@ -39,7 +44,7 @@ Simply run the application and point camera on somebody's face. Detected emotion
 ## Effectiveness
 The chart presents the accuracy for different emotional facial expressions: 
 <p align="center">
-  <img width="840" src="images/graph.jpg"/>
+  <img width="840" src="images/graph.png"/>
 </p>
 
 ## Built with
