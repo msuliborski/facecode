@@ -1,4 +1,4 @@
-# Facecode
+<h1><img width="25" src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png">Facecode</h1>
 Application that can detect emotions in real time just from camera feedback using deep learning. <br/>
 Model has been created in Python using TensorFlow and converted to .tflite format. <br/>
 <p align="center">
